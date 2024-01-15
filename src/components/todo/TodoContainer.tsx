@@ -10,7 +10,6 @@ const TodoContainer = () => {
 const {data: todos , isLoading, isError} = useGetTodosQuery(undefined)
   // const {todos} = useAppSelector((state)=> state.todos)
 
-
   return (
     <div>
       <div className="flex justify-between mb-5 ">

@@ -12,7 +12,8 @@ import {
 import {Input} from "../ui/input";
 import {Label} from "../ui/label";
 
-import {useAddTodoMutation} from "@/redux/api/api";
+import {useAddTodoMutation, useUpdateTodoMutation} from "@/redux/api/api";
+
 import {
   Select,
   SelectContent,
@@ -22,42 +23,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-// import { useAppDispatch } from "@/redux/hook";
 
-const AddTodoModal = () => {
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
+type TTodoCardProps = {
+  _id: string;
+  title: string;
+  description: string;
+  isCompleted?: boolean;
+  priority: string;
+};
+const UpdateTodoModal = ({
+  title,
+  description,
+  _id,
+  isCompleted,
+  priority,
+}: TTodoCardProps) => {
+  //   const [task, setTask] = useState("");
+  //   const [description, setDescription] = useState("");
+  //   const [priority, setPriority] = useState("");
   // for local state managment
   // const dispatch = useAppDispatch()
 
-  const [addTodo, {isLoading, isError, isSuccess}] = useAddTodoMutation();
+  const [updateTodo] = useUpdateTodoMutation();
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    // const randomString = Math.random().toString(36).substring(2, 7);
-
-    const taskDetails = {
-      // id: randomString,
-      title: task,
-      description: description,
-      isCompleted: false,
-      priority,
+  const handleSubmit = async (values: any) => {
+    const data = {
+      ...values,
+      _id,
     };
-    // for local state managment
-    // dispatch(addTodo(taskDetails));
-    addTodo(taskDetails);
- 
-  };
 
+    await updateTodo({_id, values: data});
+  };
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-primary-gradient text-xl font-semibold">
-          Add todo
-        </Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add task</DialogTitle>
@@ -65,7 +63,7 @@ const AddTodoModal = () => {
             Add your tasks that you want to finish.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="task" className="text-right">
@@ -115,4 +113,4 @@ const AddTodoModal = () => {
   );
 };
 
-export default AddTodoModal;
+export default UpdateTodoModal;
